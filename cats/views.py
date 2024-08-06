@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.throttling import AnonRateThrottle
+from rest_framework.pagination import BasePagination
 
 from .models import Achievement, Cat, User
 from .permissions import OwnerOrReadOnly
@@ -13,7 +14,7 @@ class CatViewSet(viewsets.ModelViewSet):
     serializer_class = CatSerializer
     permission_classes = (OwnerOrReadOnly,)
     throttle_classes = (AnonRateThrottle,)
-    # throttle for everybody:
+    # throttle to stop requests between 3 to 5 am:
     # throttle_classes = (WorkingHoursRateThrottle, ScopedRateThrottle)
     # throttle_scope = 'low_request'
 
