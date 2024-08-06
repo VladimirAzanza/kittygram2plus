@@ -1,6 +1,6 @@
-from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, viewsets
 from rest_framework.throttling import AnonRateThrottle
-from rest_framework.pagination import BasePagination
 
 from .models import Achievement, Cat, User
 from .permissions import OwnerOrReadOnly
@@ -17,6 +17,13 @@ class CatViewSet(viewsets.ModelViewSet):
     # throttle to stop requests between 3 to 5 am:
     # throttle_classes = (WorkingHoursRateThrottle, ScopedRateThrottle)
     # throttle_scope = 'low_request'
+    filter_backends = (
+        DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter
+    )
+    filterset_fields = ('color', 'birth_year', 'owner')
+    search_fields = ('name', 'owner__username')
+    ordering_fields = ('name', 'birth_year')
+    ordering = ('birth_year',)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
